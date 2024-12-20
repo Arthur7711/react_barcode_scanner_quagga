@@ -1,40 +1,47 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { ThemeProvider, createTheme } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
-import { useState } from 'react';
-import Login from './pages/Login';
-import Scanner from './pages/Scanner';
-import { LanguageProvider } from './contexts/LanguageContext';
-import { PermissionsProvider } from './contexts/PermissionsContext';
-import LanguageSelector from './components/LanguageSelector';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import CssBaseline from "@mui/material/CssBaseline";
+import { useState } from "react";
+import Login from "./pages/Login";
+import Scanner from "./pages/Scanner";
+import { LanguageProvider } from "./contexts/LanguageContext";
+import { PermissionsProvider } from "./contexts/PermissionsContext";
+import LanguageSelector from "./components/LanguageSelector";
+import { Tasks } from "./pages/Tasks";
+import { Shop } from "./pages/Shop";
 
 const theme = createTheme({
   palette: {
-    mode: 'light',
+    mode: "light",
     primary: {
-      main: '#6200EE',
-      light: '#B794F4',
-      dark: '#4A148C',
-      contrastText: '#fff',
+      main: "#6200EE",
+      light: "#B794F4",
+      dark: "#4A148C",
+      contrastText: "#fff",
     },
     secondary: {
-      main: '#03DAC6',
-      light: '#64ffda',
-      dark: '#018786',
-      contrastText: '#000',
+      main: "#03DAC6",
+      light: "#64ffda",
+      dark: "#018786",
+      contrastText: "#000",
     },
     background: {
-      default: '#f5f5f5',
-      paper: '#ffffff',
+      default: "#f5f5f5",
+      paper: "#ffffff",
     },
     error: {
-      main: '#B00020',
+      main: "#B00020",
     },
     success: {
-      main: '#00C853',
+      main: "#00C853",
     },
     action: {
-      hover: 'rgba(98, 0, 238, 0.04)',
+      hover: "rgba(98, 0, 238, 0.04)",
     },
   },
   typography: {
@@ -46,7 +53,7 @@ const theme = createTheme({
       fontWeight: 600,
     },
     button: {
-      textTransform: 'none',
+      textTransform: "none",
       fontWeight: 600,
     },
   },
@@ -58,9 +65,9 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           borderRadius: 8,
-          boxShadow: 'none',
-          '&:hover': {
-            boxShadow: '0 2px 8px rgba(98, 0, 238, 0.15)',
+          boxShadow: "none",
+          "&:hover": {
+            boxShadow: "0 2px 8px rgba(98, 0, 238, 0.15)",
           },
         },
       },
@@ -68,7 +75,7 @@ const theme = createTheme({
     MuiTextField: {
       styleOverrides: {
         root: {
-          '& .MuiOutlinedInput-root': {
+          "& .MuiOutlinedInput-root": {
             borderRadius: 8,
           },
         },
@@ -77,7 +84,7 @@ const theme = createTheme({
     MuiPaper: {
       styleOverrides: {
         root: {
-          boxShadow: '0 2px 12px rgba(0,0,0,0.1)',
+          boxShadow: "0 2px 12px rgba(0,0,0,0.1)",
         },
       },
     },
@@ -98,20 +105,21 @@ interface UserInfo {
 
 function App() {
   const [userInfo, setUserInfo] = useState<UserInfo | null>(() => {
-    const token = localStorage.getItem('token');
-    const email = localStorage.getItem('userEmail');
+    const token = localStorage.getItem("token");
+    const email = localStorage.getItem("userEmail");
     return token && email ? { token, email } : null;
   });
+  const [shopName, setShopName] = useState("");
 
   const handleLogin = (token: string, email: string) => {
-    localStorage.setItem('token', token);
-    localStorage.setItem('userEmail', email);
+    localStorage.setItem("token", token);
+    localStorage.setItem("userEmail", email);
     setUserInfo({ token, email });
   };
 
-  const handleLogout = () => {
-    setUserInfo(null);
-  };
+  // const handleLogout = () => {
+  //   setUserInfo(null);
+  // };
 
   return (
     <ThemeProvider theme={theme}>
@@ -121,29 +129,42 @@ function App() {
           <LanguageSelector />
           <Router>
             <Routes>
-              <Route 
-                path="/" 
+              <Route
+                path="/"
                 element={
                   !userInfo ? (
                     <Login onLogin={handleLogin} />
                   ) : (
-                    <Navigate to="/scanner" replace />
+                    <Navigate to="/tasks" replace />
                   )
-                } 
+                }
               />
-              <Route 
-                path="/scanner" 
+              <Route
+                path="/tasks"
+                element={userInfo ? <Tasks /> : <Navigate to="/" replace />}
+              />
+              <Route
+                path="/shop"
                 element={
                   userInfo ? (
-                    <Scanner 
-                      token={userInfo.token} 
+                    <Shop setShopName={setShopName} shopName={shopName} />
+                  ) : (
+                    <Navigate to="/" replace />
+                  )
+                }
+              />
+              <Route
+                path="/scanner"
+                element={
+                  userInfo ? (
+                    <Scanner
+                      token={userInfo.token}
                       userEmail={userInfo.email}
-                      onLogout={handleLogout}
                     />
                   ) : (
                     <Navigate to="/" replace />
                   )
-                } 
+                }
               />
             </Routes>
           </Router>
@@ -153,4 +174,4 @@ function App() {
   );
 }
 
-export default App; 
+export default App;
