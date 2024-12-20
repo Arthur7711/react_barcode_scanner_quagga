@@ -22,8 +22,6 @@ import { BarcodeScanner } from "../components/BarcodeScanner";
 
 interface ScannerProps {
   token: string;
-  userEmail: string;
-  onLogout?: () => void;
 }
 
 interface SubmissionData {
@@ -38,7 +36,7 @@ interface SubmissionData {
   comments: string;
 }
 
-const Scanner = ({ token, userEmail }: ScannerProps) => {
+const Scanner = ({ token }: ScannerProps) => {
   const [submissionData, setSubmissionData] = useState<SubmissionData>({
     images: [],
     previews: [],
@@ -56,7 +54,6 @@ const Scanner = ({ token, userEmail }: ScannerProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const file2InputRef = useRef<HTMLInputElement>(null);
-  // const [isLoading, setLoading] = useState(false);
 
   const { t } = useLanguage();
   const {
@@ -170,6 +167,9 @@ const Scanner = ({ token, userEmail }: ScannerProps) => {
     submissionData.images.forEach((image, index) => {
       formData.append(`image${index}`, image);
     });
+    submissionData.priceImage.forEach((image, index) => {
+      formData.append(`image${index}`, image);
+    });
     formData.append("imageCount", submissionData.images.length.toString());
     formData.append("barcode", submissionData.barcode);
     formData.append("shopLocation", submissionData.shopLocation);
@@ -201,6 +201,8 @@ const Scanner = ({ token, userEmail }: ScannerProps) => {
       setSubmissionData({
         images: [],
         previews: [],
+        priceImage: [],
+        pricePreviews: [],
         barcode: "",
         shopLocation: "",
         skuPrice: "",
@@ -250,264 +252,290 @@ const Scanner = ({ token, userEmail }: ScannerProps) => {
           </Alert>
         )}
 
-        <Box
-          sx={{
-            width: "100%",
-            display: "flex",
-            justifyContent: "flex-end",
-          }}
-        >
-          {(() => {
-            const disable = !(
-              submissionData.barcode &&
-              submissionData.images &&
-              submissionData.priceImage &&
-              submissionData.skuPrice
-            );
-            return (
-              <Button
-                disabled={disable}
-                sx={{
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  border: "2px solid",
-                  borderColor: disable ? "#DEE0E5" : "#53CA89",
-                  borderRadius: 1,
-                  height: "40px",
-                  minWidth: "100px",
-                }}
-                // onClick={() => ()}
-              >
-                <Typography
-                  component="p"
-                  sx={{
-                    textAlign: { xs: "center", sm: "left" },
-                    color: "#000",
-                  }}
-                >
-                  {t("shop.save")}
-                </Typography>
-              </Button>
-            );
-          })()}
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "flex-start",
-            width: "100%",
-            gap: 1,
-          }}
-        >
-          <Typography>{t("scanner.enter_price")}</Typography>
-          <TextField sx={{ width: "100%" }} />
-        </Box>
-
-        <Box
-          sx={{
-            display: "flex",
-            gap: 2,
-            justifyContent: "space-between",
-            width: "100%",
-          }}
-        >
-          <Box>
-            {submissionData.images.length ? (
-              <Box
-                sx={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fill, minmax(100px, 1fr))",
-                  gap: 1,
-                }}
-              >
-                {submissionData.previews.map((preview, index) => (
-                  <Box
-                    key={preview}
-                    sx={{
-                      position: "relative",
-                      paddingTop: "100%",
-                      borderRadius: 1,
-                      overflow: "hidden",
-                      bgcolor: "grey.100",
-                    }}
-                  >
-                    <Box
-                      component="img"
-                      src={preview}
-                      alt={`Preview ${index + 1}`}
-                      sx={{
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                      }}
-                    />
-                    <IconButton
-                      size="small"
-                      onClick={() => handleRemoveImage("main")}
-                      sx={{
-                        position: "absolute",
-                        top: 4,
-                        right: 4,
-                        bgcolor: "rgba(0, 0, 0, 0.5)",
-                        "&:hover": {
-                          bgcolor: "rgba(0, 0, 0, 0.7)",
-                        },
-                      }}
-                    >
-                      <Close sx={{ color: "white", fontSize: 20 }} />
-                    </IconButton>
-                  </Box>
-                ))}
-              </Box>
-            ) : (
-              <>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => handleImageUpload(e, "main")}
-                  ref={fileInputRef}
-                  multiple
-                  style={{ display: "none" }}
-                />
-                <Button
-                  variant="contained"
-                  fullWidth
-                  onClick={() => fileInputRef.current?.click()}
-                  sx={{
-                    height: "100px",
-                    background: "#DEE0E5",
-                    color: "#000",
-                    minWidth: "150px",
-                  }}
-                >
-                  {t("scanner.uploadImage")}
-                </Button>
-              </>
-            )}
-          </Box>
-          <Box>
-            {submissionData.priceImage.length ? (
-              <Box
-                sx={{
-                  display: "grid",
-                  gridTemplateColumns: "repeat(auto-fill, minmax(100px, 1fr))",
-                  gap: 1,
-                  width: "100%",
-                }}
-              >
-                {submissionData.pricePreviews.map((preview, index) => (
-                  <Box
-                    key={preview}
-                    sx={{
-                      position: "relative",
-                      paddingTop: "100%",
-                      borderRadius: 1,
-                      overflow: "hidden",
-                      bgcolor: "grey.100",
-                    }}
-                  >
-                    <Box
-                      component="img"
-                      src={preview}
-                      alt={`Preview ${index + 1}`}
-                      sx={{
-                        position: "absolute",
-                        top: 0,
-                        left: 0,
-                        width: "100%",
-                        height: "100%",
-                        objectFit: "cover",
-                      }}
-                    />
-                    <IconButton
-                      size="small"
-                      onClick={() => handleRemoveImage("price")}
-                      sx={{
-                        position: "absolute",
-                        top: 4,
-                        right: 4,
-                        bgcolor: "rgba(0, 0, 0, 0.5)",
-                        "&:hover": {
-                          bgcolor: "rgba(0, 0, 0, 0.7)",
-                        },
-                      }}
-                    >
-                      <Close sx={{ color: "white", fontSize: 20 }} />
-                    </IconButton>
-                  </Box>
-                ))}
-              </Box>
-            ) : (
-              <>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => handleImageUpload(e, "price")}
-                  ref={file2InputRef}
-                  multiple
-                  style={{ display: "none" }}
-                />
-                <Button
-                  variant="contained"
-                  fullWidth
-                  onClick={() => file2InputRef.current?.click()}
-                  sx={{
-                    height: "100px",
-                    background: "#DEE0E5",
-                    color: "#000",
-                    minWidth: "150px",
-                  }}
-                >
-                  {t("scanner.uploadPriceImage")}
-                </Button>
-              </>
-            )}
-          </Box>
-        </Box>
-
-        {/* separate part of page !!! */}
-        <Box>
-          <Button
-            variant="contained"
-            fullWidth
-            onClick={
-              isScanning ? () => setIsScanning(false) : handleStartScanning
-            }
-            color={isScanning ? "secondary" : "primary"}
-            sx={{ mb: 1 }}
-          >
-            {isScanning ? t("scanner.stopScanning") : t("scanner.scanBarcode")}
-          </Button>
-          {isScanning && (
-            <BarcodeScanner
-              onDetected={handleBarcodeDetected}
-              onError={setError}
-            />
-          )}
-          {submissionData.barcode && (
-            <Alert
-              severity="success"
-              sx={{ mt: 1 }}
-              action={
-                <Button
-                  color="inherit"
-                  size="small"
-                  onClick={() => setIsScanning(true)}
-                >
-                  {t("scanner.scanAgain")}
-                </Button>
-              }
+        {submissionData.barcode ? (
+          <>
+            <Box
+              sx={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "flex-end",
+              }}
             >
-              {t("scanner.barcodeDetected")}:{" "}
-              <strong>{submissionData.barcode}</strong>
-            </Alert>
-          )}
-        </Box>
+              {(() => {
+                const disable = !(
+                  submissionData.barcode &&
+                  submissionData.images &&
+                  submissionData.priceImage &&
+                  submissionData.skuPrice
+                );
+                return (
+                  <Button
+                    disabled={disable}
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      border: "2px solid",
+                      borderColor: disable ? "#DEE0E5" : "#53CA89",
+                      borderRadius: 1,
+                      height: "40px",
+                      minWidth: "100px",
+                    }}
+                    // onClick={() => ()}
+                  >
+                    <Typography
+                      component="p"
+                      sx={{
+                        textAlign: { xs: "center", sm: "left" },
+                        color: "#000",
+                      }}
+                    >
+                      {t("shop.save")}
+                    </Typography>
+                  </Button>
+                );
+              })()}
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                justifyContent: "flex-start",
+                width: "100%",
+                gap: 1,
+              }}
+            >
+              <Typography>{t("scanner.enter_price")}</Typography>
+              <TextField
+                sx={{ width: "100%" }}
+                value={submissionData.skuPrice}
+                onChange={(e) =>
+                  setSubmissionData((prev) => {
+                    return { ...prev, skuPrice: e.target.value };
+                  })
+                }
+              />
+            </Box>
+            <Box
+              sx={{
+                display: "flex",
+                gap: 2,
+                justifyContent: "space-between",
+                width: "100%",
+              }}
+            >
+              <Box>
+                {submissionData.images.length ? (
+                  <Box
+                    sx={{
+                      display: "grid",
+                      gridTemplateColumns:
+                        "repeat(auto-fill, minmax(100px, 1fr))",
+                      gap: 1,
+                    }}
+                  >
+                    {submissionData.previews.map((preview, index) => (
+                      <Box
+                        key={preview}
+                        sx={{
+                          position: "relative",
+                          paddingTop: "100%",
+                          borderRadius: 1,
+                          overflow: "hidden",
+                          bgcolor: "grey.100",
+                        }}
+                      >
+                        <Box
+                          component="img"
+                          src={preview}
+                          alt={`Preview ${index + 1}`}
+                          sx={{
+                            position: "absolute",
+                            top: 0,
+                            left: 0,
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                          }}
+                        />
+                        <IconButton
+                          size="small"
+                          onClick={() => handleRemoveImage("main")}
+                          sx={{
+                            position: "absolute",
+                            top: 4,
+                            right: 4,
+                            bgcolor: "rgba(0, 0, 0, 0.5)",
+                            "&:hover": {
+                              bgcolor: "rgba(0, 0, 0, 0.7)",
+                            },
+                          }}
+                        >
+                          <Close sx={{ color: "white", fontSize: 20 }} />
+                        </IconButton>
+                      </Box>
+                    ))}
+                  </Box>
+                ) : (
+                  <>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => handleImageUpload(e, "main")}
+                      ref={fileInputRef}
+                      multiple
+                      style={{ display: "none" }}
+                    />
+                    <Button
+                      variant="contained"
+                      fullWidth
+                      onClick={() => fileInputRef.current?.click()}
+                      sx={{
+                        height: "100px",
+                        background: "#DEE0E5",
+                        color: "#000",
+                        minWidth: "150px",
+                      }}
+                    >
+                      {t("scanner.uploadImage")}
+                    </Button>
+                  </>
+                )}
+              </Box>
+              <Box>
+                {submissionData.priceImage.length ? (
+                  <Box
+                    sx={{
+                      display: "grid",
+                      gridTemplateColumns:
+                        "repeat(auto-fill, minmax(100px, 1fr))",
+                      gap: 1,
+                      width: "100%",
+                    }}
+                  >
+                    {submissionData.pricePreviews.map((preview, index) => (
+                      <Box
+                        key={preview}
+                        sx={{
+                          position: "relative",
+                          paddingTop: "100%",
+                          borderRadius: 1,
+                          overflow: "hidden",
+                          bgcolor: "grey.100",
+                        }}
+                      >
+                        <Box
+                          component="img"
+                          src={preview}
+                          alt={`Preview ${index + 1}`}
+                          sx={{
+                            position: "absolute",
+                            top: 0,
+                            left: 0,
+                            width: "100%",
+                            height: "100%",
+                            objectFit: "cover",
+                          }}
+                        />
+                        <IconButton
+                          size="small"
+                          onClick={() => handleRemoveImage("price")}
+                          sx={{
+                            position: "absolute",
+                            top: 4,
+                            right: 4,
+                            bgcolor: "rgba(0, 0, 0, 0.5)",
+                            "&:hover": {
+                              bgcolor: "rgba(0, 0, 0, 0.7)",
+                            },
+                          }}
+                        >
+                          <Close sx={{ color: "white", fontSize: 20 }} />
+                        </IconButton>
+                      </Box>
+                    ))}
+                  </Box>
+                ) : (
+                  <>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => handleImageUpload(e, "price")}
+                      ref={file2InputRef}
+                      multiple
+                      style={{ display: "none" }}
+                    />
+                    <Button
+                      variant="contained"
+                      fullWidth
+                      onClick={() => file2InputRef.current?.click()}
+                      sx={{
+                        height: "100px",
+                        background: "#DEE0E5",
+                        color: "#000",
+                        minWidth: "150px",
+                      }}
+                    >
+                      {t("scanner.uploadPriceImage")}
+                    </Button>
+                  </>
+                )}
+              </Box>
+            </Box>
+          </>
+        ) : (
+          <Box
+            sx={{
+              width: "100%",
+              display: "flex",
+              flexDirection: "column",
+              gap: 1,
+            }}
+          >
+            <Typography variant="h6">{t("scanner.pointInfo")}</Typography>
+            <Button
+              variant="contained"
+              fullWidth
+              onClick={
+                isScanning ? () => setIsScanning(false) : handleStartScanning
+              }
+              sx={{
+                height: "100px",
+                width: "100%",
+                background: "#DEE0E5",
+                color: "#000",
+              }}
+            >
+              {isScanning
+                ? t("scanner.stopScanning")
+                : t("scanner.scanBarcode")}
+            </Button>
+            {isScanning && (
+              <BarcodeScanner
+                onDetected={handleBarcodeDetected}
+                onError={setError}
+              />
+            )}
+            {submissionData.barcode && (
+              <Alert
+                severity="success"
+                sx={{ mt: 1 }}
+                action={
+                  <Button
+                    color="inherit"
+                    size="small"
+                    onClick={() => setIsScanning(true)}
+                  >
+                    {t("scanner.scanAgain")}
+                  </Button>
+                }
+              >
+                {t("scanner.barcodeDetected")}:{" "}
+                <strong>{submissionData.barcode}</strong>
+              </Alert>
+            )}
+          </Box>
+        )}
       </Paper>
 
       <Dialog

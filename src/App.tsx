@@ -12,7 +12,7 @@ import Scanner from "./pages/Scanner";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import { PermissionsProvider } from "./contexts/PermissionsContext";
 import LanguageSelector from "./components/LanguageSelector";
-import { Tasks } from "./pages/Tasks";
+import { Tasks } from "./pages/TasksPage";
 import { Shop } from "./pages/Shop";
 
 const theme = createTheme({
@@ -157,10 +157,7 @@ function App() {
                 path="/scanner"
                 element={
                   userInfo ? (
-                    <Scanner
-                      token={userInfo.token}
-                      userEmail={userInfo.email}
-                    />
+                    <Scanner token={userInfo.token} />
                   ) : (
                     <Navigate to="/" replace />
                   )
