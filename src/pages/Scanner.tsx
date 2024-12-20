@@ -253,7 +253,9 @@ const Scanner = ({ token }: ScannerProps) => {
             {error}
           </Alert>
         )}
-
+        {submissionData.barcode && isScanned ? (
+          <Typography variant="h2" sx={{position:'absolute', top: 60}}>{submissionData.barcode}</Typography>
+        ) : null}
         {isScanned ? (
           <>
             <Box
@@ -283,7 +285,7 @@ const Scanner = ({ token }: ScannerProps) => {
                       height: "40px",
                       minWidth: "100px",
                     }}
-                    // onClick={() => ()}
+                    onClick={handleSubmit}
                   >
                     <Typography
                       component="p"
@@ -523,7 +525,13 @@ const Scanner = ({ token }: ScannerProps) => {
                 severity="success"
                 sx={{ mt: 1 }}
                 action={
-                  <Box sx={{ display: "flex", alignItems: "center", justifyContent:'space-between' }}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                    }}
+                  >
                     <Button
                       color="inherit"
                       size="small"
