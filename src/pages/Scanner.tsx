@@ -52,6 +52,7 @@ const Scanner = ({ token }: ScannerProps) => {
   const [isScanning, setIsScanning] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isScanned, setIsScanned] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const file2InputRef = useRef<HTMLInputElement>(null);
 
@@ -209,6 +210,7 @@ const Scanner = ({ token }: ScannerProps) => {
         skuName: "",
         comments: "",
       });
+      setIsScanned(false);
       setShowConfirmation(false);
     } catch (err: unknown) {
       console.log(err);
@@ -252,7 +254,7 @@ const Scanner = ({ token }: ScannerProps) => {
           </Alert>
         )}
 
-        {submissionData.barcode ? (
+        {isScanned ? (
           <>
             <Box
               sx={{
@@ -521,13 +523,22 @@ const Scanner = ({ token }: ScannerProps) => {
                 severity="success"
                 sx={{ mt: 1 }}
                 action={
-                  <Button
-                    color="inherit"
-                    size="small"
-                    onClick={() => setIsScanning(true)}
-                  >
-                    {t("scanner.scanAgain")}
-                  </Button>
+                  <Box sx={{ display: "flex", alignItems: "center", justifyContent:'space-between' }}>
+                    <Button
+                      color="inherit"
+                      size="small"
+                      onClick={() => setIsScanning(true)}
+                    >
+                      {t("scanner.scanAgain")}
+                    </Button>
+                    <Button
+                      color="inherit"
+                      size="small"
+                      onClick={() => setIsScanned(true)}
+                    >
+                      {t("scanner.next")}
+                    </Button>
+                  </Box>
                 }
               >
                 {t("scanner.barcodeDetected")}:{" "}

@@ -21,7 +21,8 @@ export const translations = {
       save: "Save",
     },
     scanner: {
-      pointInfo: 'Point at barcode',
+      next: "Next",
+      pointInfo: "Point at barcode",
       enter_price: "Enter price",
       title: "Item Scanner",
       uploadImage: "Product Photo",
@@ -70,7 +71,8 @@ export const translations = {
       save: "Сохранить",
     },
     scanner: {
-      pointInfo: 'Наведите на ШК',
+      next: "следующий",
+      pointInfo: "Наведите на ШК",
       enter_price: "Введите цену",
       title: "Сканер товаров",
       uploadImage: "Фото товара",
@@ -120,7 +122,8 @@ export const translations = {
       save: "Saqlash",
     },
     scanner: {
-      pointInfo: 'Shk ishora',
+      next: "Keyingisi",
+      pointInfo: "Shk ishora",
       enter_price: "Narxini kiriting",
       title: "Mahsulot skaneri",
       uploadImage: "Mahsulot fotosurati",
