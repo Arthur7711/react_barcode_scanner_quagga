@@ -33,6 +33,15 @@ export const Shop = ({ shopName, setShopName }: IProps) => {
           gap: 4,
         }}
       >
+        <Typography
+          component="p"
+          sx={{
+            color: "#000",
+            width: "100%",
+          }}
+        >
+          {t("shop.enter_store")}
+        </Typography>
         <TextField
           value={shopName}
           onChange={(event) => setShopName(event.target.value)}
@@ -57,7 +66,7 @@ export const Shop = ({ shopName, setShopName }: IProps) => {
               height: "40px",
               minWidth: "100px",
             }}
-            onClick={()=>navigate('/scanner')}
+            onClick={() => navigate("/scanner")}
           >
             <Typography
               component="p"

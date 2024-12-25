@@ -19,6 +19,7 @@ export const translations = {
     shop: {
       shop: "Enter store",
       save: "Save",
+      enter_store: "Enter store",
     },
     scanner: {
       next: "Next",
@@ -69,6 +70,7 @@ export const translations = {
     shop: {
       shop: "Введите магазин",
       save: "Сохранить",
+      enter_store: "Введите магазин",
     },
     scanner: {
       next: "следующий",
@@ -120,6 +122,7 @@ export const translations = {
     shop: {
       shop: "Do'konga kiring",
       save: "Saqlash",
+      enter_store: "Do'konga kiring",
     },
     scanner: {
       next: "Keyingisi",
