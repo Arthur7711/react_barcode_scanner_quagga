@@ -254,7 +254,12 @@ const Scanner = ({ token }: ScannerProps) => {
           </Alert>
         )}
         {submissionData.barcode && isScanned ? (
-          <Typography variant="h2" sx={{position:'absolute', top: 60}}>{submissionData.barcode}</Typography>
+          <Typography
+            component="p"
+            sx={{ position: "absolute", top: 60, fontSize: 16 }}
+          >
+            {submissionData.barcode}
+          </Typography>
         ) : null}
         {isScanned ? (
           <>
